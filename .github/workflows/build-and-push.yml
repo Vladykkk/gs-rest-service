@@ -53,17 +53,12 @@ jobs:
         run: mvn -q -f complete/pom.xml -DskipTests verify
   
       # 2) аналіз на SonarCloud (без жодних localhost)
-      - name: SonarCloud analysis
-        env:
-          SONAR_TOKEN:       ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORG:         ${{ secrets.SONAR_ORG }}          # напр. vladykkk
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}  # напр. vladykkk_gs-rest
+      - name: Print sonar props
         run: |
-          mvn -q -f complete/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.organization="$SONAR_ORG" \
-            -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
-            -Dsonar.token="$SONAR_TOKEN"
+          mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.host.url -DforceStdout
+          mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.organization -DforceStdout
+          mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.projectKey -DforceStdout
+      
 
   docker:
     needs: [test, sonar]
