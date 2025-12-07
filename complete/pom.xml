@@ -17,6 +17,7 @@
 		<java.version>17</java.version>
 		<sonar.projectKey>gs-rest</sonar.projectKey>
 		<sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
+		 <sonar.organization>${env.SONAR_ORG}</sonar.organization>
 	</properties>
 	<dependencies>
 		<dependency>
