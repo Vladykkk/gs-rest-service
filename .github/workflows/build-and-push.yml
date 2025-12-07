@@ -15,8 +15,23 @@ jobs:
         working-directory: complete
         run: mvn -q -B test
 
-  docker:
+  sonar:
     needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: 'temurin', java-version: '17' }
+      - name: SonarQube analysis
+        working-directory: complete
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN:    ${{ secrets.SONAR_TOKEN }}
+        run: mvn -q -DskipTests sonar:sonar -Dsonar.login="$SONAR_TOKEN"
+  
+
+  docker:
+    needs: [test, sonar]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

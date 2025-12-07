@@ -29,6 +29,11 @@
 		</dependency>
 	</dependencies>
 
+	<properties>
+	  <sonar.projectKey>gs-rest</sonar.projectKey>
+	  <sonar.host.url>${env.SONAR_HOST_URL}</sonar.host.url>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
