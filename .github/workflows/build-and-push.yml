@@ -31,5 +31,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./complete
+          file: ./complete/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gs-rest:latest
