@@ -30,12 +30,12 @@ jobs:
           SONAR_ORG:        ${{ secrets.SONAR_ORG }}
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
         run: |
-          mvn -q -DskipTests sonar:sonar \
-            -Dsonar.host.url="$SONAR_HOST_URL" \
-            -Dsonar.organization="$SONAR_ORG" \
-            -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
-            -Dsonar.token="$SONAR_TOKEN"
-  
+            mvn -q -DskipTests package
+            mvn -q -DskipTests sonar:sonar \
+              -Dsonar.host.url="$SONAR_HOST_URL" \
+              -Dsonar.organization="$SONAR_ORG" \
+              -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+              -Dsonar.token="$SONAR_TOKEN"
 
   docker:
     needs: [test, sonar]
