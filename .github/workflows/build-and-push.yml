@@ -42,31 +42,31 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
   
       - name: Build (verify) for bytecode
-              env:
-                SONAR_HOST_URL: https://sonarcloud.io
-                SONAR_ORG: ${{ secrets.SONAR_ORG }}
-                SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-              run: mvn -q -f complete/pom.xml -DskipTests verify
+        env:
+            SONAR_HOST_URL: https://sonarcloud.io
+            SONAR_ORG: ${{ secrets.SONAR_ORG }}
+            SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+        run: mvn -q -f complete/pom.xml -DskipTests verify
       
-            - name: Print sonar props (sanity)
-              env:
-                SONAR_HOST_URL: https://sonarcloud.io
-                SONAR_ORG: ${{ secrets.SONAR_ORG }}
-                SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-              run: |
-                mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.host.url -DforceStdout
-                mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.organization -DforceStdout
-                mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.projectKey -DforceStdout
+      - name: Print sonar props (sanity)
+        env:
+            SONAR_HOST_URL: https://sonarcloud.io
+            SONAR_ORG: ${{ secrets.SONAR_ORG }}
+            SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+        run: |
+            mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.host.url -DforceStdout
+            mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.organization -DforceStdout
+            mvn -q -f complete/pom.xml help:evaluate -Dexpression=sonar.projectKey -DforceStdout
       
-            - name: SonarCloud analysis
-              env:
-                SONAR_HOST_URL: https://sonarcloud.io
-                SONAR_ORG: ${{ secrets.SONAR_ORG }}
-                SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-                SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-              run: |
-                mvn -q -f complete/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-                  -Dsonar.token="$SONAR_TOKEN"
+      - name: SonarCloud analysis
+        env:
+            SONAR_HOST_URL: https://sonarcloud.io
+            SONAR_ORG: ${{ secrets.SONAR_ORG }}
+            SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+            mvn -q -f complete/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                -Dsonar.token="$SONAR_TOKEN"
       
   docker:
     needs: [test, sonar]
