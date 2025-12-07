@@ -39,17 +39,16 @@ jobs:
             key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
             restore-keys: ${{ runner.os }}-m2
         - name: SonarCloud analysis
-          working-directory: complete
           env:
             SONAR_TOKEN:       ${{ secrets.SONAR_TOKEN }}
             SONAR_ORG:         ${{ secrets.SONAR_ORG }}
             SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           run: |
             # спочатку зібрати, щоб з'явився target/classes
-            mvn -q -DskipTests package
+            mvn -q -f complete/pom.xml -DskipTests verify
             # далі аналіз (CI-based, не A3S)
-            mvn -q org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-              -Dsonar.host.url=https://sonarcloud.io \
+            mvn -q -f complete/pom.xml  org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+              -Dsonar.host.url="$SONAR_HOST_URL" \
               -Dsonar.organization="$SONAR_ORG" \
               -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
               -Dsonar.token="$SONAR_TOKEN"
