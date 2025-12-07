@@ -25,10 +25,10 @@ jobs:
       - name: SonarCloud analysis
         working-directory: complete
         env:
-          SONAR_HOST_URL:   ${{ secrets.SONAR_HOST_URL }}     # https://sonarcloud.io
+          SONAR_HOST_URL:   ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN:      ${{ secrets.SONAR_TOKEN }}
           SONAR_ORG:        ${{ secrets.SONAR_ORG }}
-          SONAR_PROJECT_KEY:${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
         run: |
           mvn -q -DskipTests sonar:sonar \
             -Dsonar.host.url="$SONAR_HOST_URL" \
