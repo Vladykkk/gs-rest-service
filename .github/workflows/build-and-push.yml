@@ -1,4 +1,5 @@
 name: build-and-push
+
 on:
   push:
     branches: [ main ]
@@ -9,18 +10,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # бажано для коректнішого аналізу гілок/PR
+
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
+
       - name: Cache Maven repo
         uses: actions/cache@v4
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build & Test (Maven)
-        run: mvn -q -B test
+
+      # (опційно, але корисно) кеш Сонару
+      - name: Cache Sonar
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Build, Test & Sonar Analysis (Maven)
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          mvn -B -q verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=${{ secrets.SONAR_ORG }}
+          -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
 
   docker:
     needs: test
