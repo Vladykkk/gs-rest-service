@@ -23,6 +23,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build & Test (Maven)
         run: mvn -q -B test
+        working-directory: ./complete
 
   docker:
     needs: test
@@ -39,7 +40,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./complete
+          file: ./complete/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gs-rest:latest
